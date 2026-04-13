@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사과 게임 — 합이 10</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #b8e8ff 0%, #e8fff5 100%);
+      font-family: "Segoe UI", "Noto Sans KR", sans-serif;
+      color: #1a2b3c;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .wrap {
+      width: min(96vw, 720px);
+      padding: 12px;
+    }
+    .panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      background: #ffffffd9;
+      border: 1px solid #c5e3ef;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px #00000012;
+    }
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-weight: 700;
+    }
+    .stat {
+      background: #f0f9ff;
+      border: 1px solid #cfe8f5;
+      padding: 8px 12px;
+      border-radius: 10px;
+      min-width: 100px;
+      text-align: center;
+    }
+    button {
+      border: none;
+      background: #e53935;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button:hover { background: #c62828; }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .btn-hint {
+      background: #2f80ed;
+    }
+    .btn-hint:hover { background: #176dd8; }
+    .hint {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #3d4f60;
+      line-height: 1.45;
+    }
+    #board {
+      display: grid;
+      gap: 6px;
+      padding: 12px;
+      background: #7bc96f;
+      border-radius: 16px;
+      border: 3px solid #5a9e52;
+      box-shadow: inset 0 2px 12px #00000018;
+      touch-action: none;
+    }
+    .cell {
+      aspect-ratio: 1;
+      min-width: 0;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: clamp(14px, 3.8vw, 22px);
+      cursor: crosshair;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.08s ease;
+      border: 2px solid #8b3a2a;
+      box-shadow: 0 3px 0 #5c2618, inset 0 -4px 8px #00000015;
+    }
+    .cell.apple {
+      background: radial-gradient(circle at 35% 30%, #ff6b6b 0%, #e53935 45%, #b71c1c 100%);
+      color: #fff;
+      text-shadow: 0 1px 2px #00000066;
+    }
+    .cell.empty {
+      background: #5a9e52;
+      border-color: #4a8444;
+      box-shadow: inset 0 2px 8px #00000025;
+      cursor: default;
+    }
+    .cell.select {
+      outline: 3px solid #ffeb3b;
+      outline-offset: -1px;
+      filter: brightness(1.12);
+      z-index: 1;
+    }
+    .cell.sum-ok {
+      outline: 3px solid #00e676;
+      outline-offset: -1px;
+    }
+    .cell.hint-rect {
+      outline: 3px solid #2979ff;
+      outline-offset: -1px;
+      filter: brightness(1.08);
+      animation: hintPulse 0.9s ease-in-out infinite alternate;
+    }
+    @keyframes hintPulse {
+      from { transform: scale(1.0); }
+      to { transform: scale(1.03); }
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: #00000080;
+      padding: 18px;
+      z-index: 50;
+    }
+    .overlay.show { display: grid; }
+    .modal {
+      width: min(92vw, 520px);
+      background: #ffffffee;
+      border: 1px solid #c5e3ef;
+      border-radius: 16px;
+      box-shadow: 0 16px 48px #0000002a;
+      backdrop-filter: blur(6px);
+      padding: 16px 16px 14px;
+    }
+    .modal h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: -0.2px;
+    }
+    .modal p {
+      margin: 0 0 12px;
+      color: #304456;
+      line-height: 1.5;
+      font-size: 14px;
+      white-space: pre-line;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .btn-secondary {
+      background: #2f80ed;
+    }
+    .btn-secondary:hover { background: #176dd8; }
+    .mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .mode-row span {
+      font-size: 13px;
+      font-weight: 700;
+      color: #3d4f60;
+      margin-right: 4px;
+    }
+    .mode-btn {
+      background: #78909c;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    .mode-btn:hover { background: #607d8b; }
+    .mode-btn.active {
+      background: #37474f;
+      box-shadow: inset 0 2px 4px #00000033;
+    }
+    #board.board-inactive {
+      opacity: 0.72;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mode-row">
+      <span>모드:</span>
+      <button type="button" id="userModeBtn" class="mode-btn">유저 모드</button>
+      <button type="button" id="devModeBtn" class="mode-btn active">개발자 모드</button>
+    </div>
+    <div class="panel">
+      <div class="stats">
+        <div class="stat">경과 시간: <span id="elapsed">0:00</span></div>
+        <div class="stat">없앤 사과: <span id="cleared">0</span></div>
+        <div class="stat">남은 사과: <span id="remaining">0</span></div>
+        <div class="stat">섞은 횟수: <span id="shuffles">0</span></div>
+        <div class="stat" id="hintStatWrap">힌트: <span id="hintStat">∞</span></div>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="hintBtn" class="btn-hint">힌트</button>
+        <button type="button" id="newGameBtn">새 게임</button>
+      </div>
+    </div>
+    <div id="board" aria-label="사과 격자"></div>
+    <p class="hint">
+      마우스로 드래그해 직사각형 범위를 고르세요. 범위 안 숫자의 <strong>합이 10</strong>이면 사과가 사라집니다.
+      빈 칸은 합에 0으로 들어갑니다. 가능한 한 많이 없애 보세요.
+    </p>
+  </div>
+
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <h2 id="overlayTitle">알림</h2>
+      <p id="overlayBody">내용</p>
+      <div class="modal-actions">
+        <button type="button" id="overlayShuffleBtn" class="btn-secondary">섞기</button>
+        <button type="button" id="overlayNewBtn">새 게임</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ROWS = 8;
+    const COLS = 10;
+    const boardEl = document.getElementById("board");
+    const clearedEl = document.getElementById("cleared");
+    const remainingEl = document.getElementById("remaining");
+    const shufflesEl = document.getElementById("shuffles");
+    const hintBtn = document.getElementById("hintBtn");
+    const newGameBtn = document.getElementById("newGameBtn");
+    const userModeBtn = document.getElementById("userModeBtn");
+    const devModeBtn = document.getElementById("devModeBtn");
+    const elapsedEl = document.getElementById("elapsed");
+    const hintStatEl = document.getElementById("hintStat");
+    const overlayEl = document.getElementById("overlay");
+    const overlayTitleEl = document.getElementById("overlayTitle");
+    const overlayBodyEl = document.getElementById("overlayBody");
+    const overlayShuffleBtn = document.getElementById("overlayShuffleBtn");
+    const overlayNewBtn = document.getElementById("overlayNewBtn");
+
+    /** @type {number[][]} 값 1~9 또는 0(빈칸) */
+    let grid = [];
+    let clearedCount = 0;
+    let shuffleCount = 0;
+
+    /** 개발자 모드: 힌트 무제한. 유저 모드: 게임당 3회 */
+    let devMode = true;
+    const USER_HINT_MAX = 3;
+    let hintUsesLeft = USER_HINT_MAX;
+
+    /** 진행 중이면 true. 클리어/고수 종료 후 false */
+    let gameActive = true;
+    let gameStartMs = 0;
+    let timerIntervalId = null;
+
+    let drag = false;
+    let r0 = 0, c0 = 0, r1 = 0, c1 = 0;
+    let hintTimeout = null;
+
+    function randInt(a, b) {
+      return Math.floor(Math.random() * (b - a + 1)) + a;
+    }
+
+    function formatTime(totalSec) {
+      const s = Math.max(0, Math.floor(totalSec));
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m}:${String(sec).padStart(2, "0")}`;
+    }
+
+    function getElapsedSeconds() {
+      return (performance.now() - gameStartMs) / 1000;
+    }
+
+    function updateElapsedDisplay() {
+      elapsedEl.textContent = formatTime(getElapsedSeconds());
+    }
+
+    function startGameTimer() {
+      stopGameTimer();
+      gameStartMs = performance.now();
+      timerIntervalId = setInterval(updateElapsedDisplay, 250);
+      updateElapsedDisplay();
+    }
+
+    function stopGameTimer() {
+      if (timerIntervalId) {
+        clearInterval(timerIntervalId);
+        timerIntervalId = null;
+      }
+    }
+
+    function updateHintUi() {
+      if (devMode) {
+        hintStatEl.textContent = "∞";
+        hintBtn.disabled = !gameActive;
+        hintBtn.title = !gameActive ? "게임이 끝났습니다. 새 게임을 눌러 주세요." : "";
+      } else {
+        hintStatEl.textContent = `${hintUsesLeft} / ${USER_HINT_MAX}`;
+        hintBtn.disabled = !gameActive || hintUsesLeft <= 0;
+        hintBtn.title = !gameActive
+          ? "게임이 끝났습니다. 새 게임을 눌러 주세요."
+          : hintUsesLeft <= 0
+            ? "이 게임에서 힌트를 모두 사용했습니다."
+            : "";
+      }
+    }
+
+    function setModeButtons() {
+      userModeBtn.classList.toggle("active", !devMode);
+      devModeBtn.classList.toggle("active", devMode);
+    }
+
+    function setBoardInteractive(on) {
+      boardEl.classList.toggle("board-inactive", !on);
+    }
+
+    function showOverlay(title, body, { showShuffle = true, showNew = true } = {}) {
+      overlayTitleEl.textContent = title;
+      overlayBodyEl.textContent = body;
+      overlayShuffleBtn.style.display = showShuffle ? "" : "none";
+      overlayNewBtn.style.display = showNew ? "" : "none";
+      overlayEl.classList.add("show");
+      overlayEl.setAttribute("aria-hidden", "false");
+    }
+
+    function hideOverlay() {
+      overlayEl.classList.remove("show");
+      overlayEl.setAttribute("aria-hidden", "true");
+    }
+
+    function buildGrid() {
+      grid = [];
+      for (let r = 0; r < ROWS; r++) {
+        const row = [];
+        for (let c = 0; c < COLS; c++) {
+          row.push(randInt(1, 9));
+        }
+        grid.push(row);
+      }
+      clearedCount = 0;
+      shuffleCount = 0;
+      hintUsesLeft = USER_HINT_MAX;
+      gameActive = true;
+      setBoardInteractive(true);
+      updateStats();
+      hideOverlay();
+      clearHintRect();
+      startGameTimer();
+      updateHintUi();
+    }
+
+    function updateStats() {
+      let rem = 0;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (grid[r][c] > 0) rem++;
+        }
+      }
+      clearedEl.textContent = clearedCount;
+      remainingEl.textContent = rem;
+      shufflesEl.textContent = shuffleCount;
+    }
+
+    function rectFromDrag() {
+      const top = Math.min(r0, r1);
+      const bottom = Math.max(r0, r1);
+      const left = Math.min(c0, c1);
+      const right = Math.max(c0, c1);
+      return { top, bottom, left, right };
+    }
+
+    function countRemaining() {
+      let rem = 0;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (grid[r][c] > 0) rem++;
+        }
+      }
+      return rem;
+    }
+
+    function sumInRect(top, bottom, left, right) {
+      let s = 0;
+      for (let r = top; r <= bottom; r++) {
+        for (let c = left; c <= right; c++) {
+          s += grid[r][c];
+        }
+      }
+      return s;
+    }
+
+    function buildPrefixSums() {
+      const ps = Array.from({ length: ROWS + 1 }, () => Array(COLS + 1).fill(0));
+      const pnz = Array.from({ length: ROWS + 1 }, () => Array(COLS + 1).fill(0));
+      for (let r = 1; r <= ROWS; r++) {
+        for (let c = 1; c <= COLS; c++) {
+          const v = grid[r - 1][c - 1];
+          ps[r][c] = ps[r - 1][c] + ps[r][c - 1] - ps[r - 1][c - 1] + v;
+          pnz[r][c] = pnz[r - 1][c] + pnz[r][c - 1] - pnz[r - 1][c - 1] + (v > 0 ? 1 : 0);
+        }
+      }
+      return { ps, pnz };
+    }
+
+    function rectQuery(p, top, left, bottom, right) {
+      const r1 = bottom + 1, c1 = right + 1;
+      const r0 = top, c0 = left;
+      return p[r1][c1] - p[r0][c1] - p[r1][c0] + p[r0][c0];
+    }
+
+    function hasAnyMove() {
+      if (countRemaining() === 0) return false;
+      const { ps, pnz } = buildPrefixSums();
+      for (let top = 0; top < ROWS; top++) {
+        for (let left = 0; left < COLS; left++) {
+          for (let bottom = top; bottom < ROWS; bottom++) {
+            for (let right = left; right < COLS; right++) {
+              const sum = rectQuery(ps, top, left, bottom, right);
+              if (sum !== 10) continue;
+              const nonZero = rectQuery(pnz, top, left, bottom, right);
+              if (nonZero > 0) return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    function findAnyMoveRect() {
+      if (countRemaining() === 0) return null;
+      const { ps, pnz } = buildPrefixSums();
+      for (let top = 0; top < ROWS; top++) {
+        for (let left = 0; left < COLS; left++) {
+          for (let bottom = top; bottom < ROWS; bottom++) {
+            for (let right = left; right < COLS; right++) {
+              const sum = rectQuery(ps, top, left, bottom, right);
+              if (sum !== 10) continue;
+              const nonZero = rectQuery(pnz, top, left, bottom, right);
+              if (nonZero > 0) return { top, left, bottom, right };
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    function shuffleRemainingOnce() {
+      const vals = [];
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (grid[r][c] > 0) vals.push(grid[r][c]);
+        }
+      }
+      for (let i = vals.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [vals[i], vals[j]] = [vals[j], vals[i]];
+      }
+      let k = 0;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (grid[r][c] > 0) {
+            grid[r][c] = vals[k++];
+          }
+        }
+      }
+      shuffleCount++;
+    }
+
+    /**
+     * 막힘일 때 남은 숫자를 섞어 가능한 수가 생기게 함.
+     * @returns {boolean} true면 이제 한 수 이상 존재, false면 고수 종료 처리됨
+     */
+    function ensureNotStuck() {
+      const rem = countRemaining();
+      if (rem === 0) return true;
+
+      const MAX_TRIES = 60;
+      for (let t = 0; t < MAX_TRIES; t++) {
+        if (hasAnyMove()) return true;
+        shuffleRemainingOnce();
+      }
+
+      if (!hasAnyMove()) {
+        endGameGosu();
+        return false;
+      }
+      return true;
+    }
+
+    function endGameGosu() {
+      gameActive = false;
+      setBoardInteractive(false);
+      stopGameTimer();
+      const elapsedSec = getElapsedSeconds();
+      showOverlay(
+        "당신은 고수입니다!",
+        `남은 사과가 있지만, 합이 10이 되는 직사각형을 만들 수 없습니다. (여러 번 섞어도 막힘이 이어집니다.)\n` +
+          `없앤 사과: ${clearedCount}, 섞은 횟수: ${shuffleCount}\n` +
+          `경과 시간: ${formatTime(elapsedSec)}`,
+        { showShuffle: false, showNew: true }
+      );
+      updateHintUi();
+    }
+
+    function checkClearOrStuck() {
+      const rem = countRemaining();
+      if (rem === 0) {
+        gameActive = false;
+        setBoardInteractive(false);
+        stopGameTimer();
+        const elapsedSec = getElapsedSeconds();
+        showOverlay(
+          "클리어!",
+          `모든 사과를 없앴습니다.\n없앤 사과: ${clearedCount}, 섞은 횟수: ${shuffleCount}\n경과 시간: ${formatTime(elapsedSec)}`,
+          { showShuffle: false }
+        );
+        updateHintUi();
+        return;
+      }
+
+      if (!hasAnyMove()) {
+        showOverlay(
+          "막힘!",
+          "지금 상태에서는 합이 10이 되는 직사각형이 없습니다. 남은 숫자를 섞어서 계속 진행합니다."
+        );
+        const ok = ensureNotStuck();
+        render();
+        if (ok) {
+          setTimeout(() => hideOverlay(), 650);
+        }
+      }
+    }
+
+    function clearSelectionClass() {
+      boardEl.querySelectorAll(".cell.select").forEach((el) => {
+        el.classList.remove("select", "sum-ok");
+      });
+    }
+
+    function clearHintRect() {
+      if (hintTimeout) {
+        clearTimeout(hintTimeout);
+        hintTimeout = null;
+      }
+      boardEl.querySelectorAll(".cell.hint-rect").forEach((el) => el.classList.remove("hint-rect"));
+    }
+
+    function showHint() {
+      if (!gameActive) return;
+
+      clearSelectionClass();
+      clearHintRect();
+
+      if (!devMode && hintUsesLeft <= 0) {
+        showOverlay("힌트 없음", "이 게임에서 힌트를 모두 사용했습니다.", { showShuffle: false });
+        setTimeout(() => hideOverlay(), 900);
+        return;
+      }
+
+      if (countRemaining() === 0) {
+        checkClearOrStuck();
+        return;
+      }
+
+      if (!devMode) {
+        hintUsesLeft--;
+        updateHintUi();
+      }
+
+      let rect = findAnyMoveRect();
+      if (!rect) {
+        showOverlay(
+          "힌트 없음(막힘)",
+          "현재 합이 10인 직사각형이 없습니다. 남은 숫자를 섞어서 진행 가능한 상태로 바꿉니다."
+        );
+        const ok = ensureNotStuck();
+        render();
+        rect = findAnyMoveRect();
+        if (!ok) return;
+        setTimeout(() => hideOverlay(), 650);
+      }
+
+      if (!rect) return;
+      for (let r = rect.top; r <= rect.bottom; r++) {
+        for (let c = rect.left; c <= rect.right; c++) {
+          const cell = boardEl.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+          if (cell && grid[r][c] > 0) cell.classList.add("hint-rect");
+        }
+      }
+
+      hintTimeout = setTimeout(() => {
+        clearHintRect();
+      }, 1100);
+    }
+
+    function highlightSelection() {
+      clearSelectionClass();
+      clearHintRect();
+      const { top, bottom, left, right } = rectFromDrag();
+      let sum = 0;
+      for (let r = top; r <= bottom; r++) {
+        for (let c = left; c <= right; c++) {
+          const cell = boardEl.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+          if (!cell) continue;
+          cell.classList.add("select");
+          sum += grid[r][c];
+        }
+      }
+      if (sum === 10) {
+        boardEl.querySelectorAll(".cell.select").forEach((el) => el.classList.add("sum-ok"));
+      }
+    }
+
+    function render() {
+      boardEl.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+      boardEl.innerHTML = "";
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const v = grid[r][c];
+          const div = document.createElement("div");
+          div.className = v > 0 ? "cell apple" : "cell empty";
+          div.dataset.r = String(r);
+          div.dataset.c = String(c);
+          if (v > 0) div.textContent = String(v);
+          boardEl.appendChild(div);
+        }
+      }
+      updateStats();
+    }
+
+    function cellFromPoint(clientX, clientY) {
+      const el = document.elementFromPoint(clientX, clientY);
+      if (!el || !el.classList.contains("cell")) return null;
+      const r = parseInt(el.dataset.r, 10);
+      const c = parseInt(el.dataset.c, 10);
+      if (Number.isNaN(r) || Number.isNaN(c)) return null;
+      return { r, c, el };
+    }
+
+    function onPointerDown(e) {
+      if (!gameActive) return;
+      if (e.button !== 0) return;
+      clearHintRect();
+      const hit = cellFromPoint(e.clientX, e.clientY);
+      if (!hit) return;
+      e.preventDefault();
+      drag = true;
+      r0 = r1 = hit.r;
+      c0 = c1 = hit.c;
+      boardEl.setPointerCapture(e.pointerId);
+      highlightSelection();
+    }
+
+    function onPointerMove(e) {
+      if (!drag) return;
+      const hit = cellFromPoint(e.clientX, e.clientY);
+      if (hit) {
+        r1 = hit.r;
+        c1 = hit.c;
+        highlightSelection();
+      }
+    }
+
+    function onPointerUp(e) {
+      if (!drag) return;
+      drag = false;
+      try {
+        boardEl.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+
+      const { top, bottom, left, right } = rectFromDrag();
+      const sum = sumInRect(top, bottom, left, right);
+      clearSelectionClass();
+      clearHintRect();
+
+      if (sum === 10) {
+        let removed = 0;
+        for (let r = top; r <= bottom; r++) {
+          for (let c = left; c <= right; c++) {
+            if (grid[r][c] > 0) {
+              removed++;
+              grid[r][c] = 0;
+            }
+          }
+        }
+        clearedCount += removed;
+        render();
+        checkClearOrStuck();
+      } else {
+        clearSelectionClass();
+      }
+    }
+
+    boardEl.addEventListener("pointerdown", onPointerDown);
+    boardEl.addEventListener("pointermove", onPointerMove);
+    boardEl.addEventListener("pointerup", onPointerUp);
+    boardEl.addEventListener("pointercancel", onPointerUp);
+
+    hintBtn.addEventListener("click", () => {
+      showHint();
+    });
+
+    userModeBtn.addEventListener("click", () => {
+      devMode = false;
+      hintUsesLeft = USER_HINT_MAX;
+      setModeButtons();
+      updateHintUi();
+    });
+
+    devModeBtn.addEventListener("click", () => {
+      devMode = true;
+      setModeButtons();
+      updateHintUi();
+    });
+
+    newGameBtn.addEventListener("click", () => {
+      buildGrid();
+      render();
+      checkClearOrStuck();
+    });
+
+    overlayShuffleBtn.addEventListener("click", () => {
+      hideOverlay();
+      if (!gameActive) return;
+      ensureNotStuck();
+      render();
+      checkClearOrStuck();
+    });
+
+    overlayNewBtn.addEventListener("click", () => {
+      buildGrid();
+      render();
+      checkClearOrStuck();
+    });
+
+    setModeButtons();
+    updateHintUi();
+    buildGrid();
+    render();
+    checkClearOrStuck();
+  </script>
+</body>
+</html>

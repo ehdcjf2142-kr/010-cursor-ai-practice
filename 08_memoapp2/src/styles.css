@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply min-h-screen bg-slate-950 text-slate-100 antialiased;
+  }
+}
+
+@layer components {
+  .app-bg {
+    background:
+      radial-gradient(1200px 600px at 15% 10%, rgba(59, 130, 246, 0.22), transparent 55%),
+      radial-gradient(900px 500px at 85% 0%, rgba(168, 85, 247, 0.18), transparent 55%),
+      linear-gradient(180deg, #0a1730, #0b1220);
+  }
+}
+

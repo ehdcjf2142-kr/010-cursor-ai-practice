@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>미래솔루션 | 기업 소개</title>
+  <style>
+    :root {
+      --primary: #1f4ed8;
+      --dark: #0f172a;
+      --text: #334155;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --muted: #94a3b8;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(6px);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .menu {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.95rem;
+      color: #475569;
+    }
+
+    .menu a:hover {
+      color: var(--primary);
+    }
+
+    section {
+      padding: 72px 0;
+    }
+
+    .hero {
+      padding: 90px 0 72px;
+      background-image:
+        linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.5)),
+        url("https://img.hankyung.com/photo/201808/AA.17531310.1.jpg");
+      background-size: cover;
+      background-position: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-wrap {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .hero h1 {
+      color: var(--white);
+      font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .hero p {
+      margin-bottom: 24px;
+      font-size: 1.02rem;
+      max-width: 560px;
+      color: #e2e8f0;
+    }
+
+    .btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      color: var(--dark);
+      background: var(--white);
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .hero-card h3 {
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
+
+    .hero-card ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hero-card li::before {
+      content: "✓ ";
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .section-title h2 {
+      color: var(--dark);
+      margin-bottom: 8px;
+      font-size: 1.8rem;
+    }
+
+    .section-title p {
+      color: #64748b;
+    }
+
+    .about-grid,
+    .services-grid,
+    .stats-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .about-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .services-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .card h3 {
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--primary);
+      font-size: 2rem;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .contact-box {
+      background: var(--dark);
+      color: #cbd5e1;
+      border-radius: 16px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .contact-box h2 {
+      color: var(--white);
+      margin-bottom: 10px;
+      font-size: 1.7rem;
+    }
+
+    .contact-info p {
+      margin-bottom: 8px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 26px 0 32px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+      background: var(--white);
+    }
+
+    @media (max-width: 920px) {
+      .hero-wrap,
+      .contact-box {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .menu {
+        display: none;
+      }
+
+      section {
+        padding: 58px 0;
+      }
+
+      .about-grid,
+      .services-grid,
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#home" class="logo">미래솔루션</a>
+      <nav class="menu">
+        <a href="#about">회사소개</a>
+        <a href="#services">서비스</a>
+        <a href="#stats">성과</a>
+        <a href="#contact">문의</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="container hero-wrap">
+        <div>
+          <h1>디지털 혁신을 현실로 만드는<br />비즈니스 파트너</h1>
+          <p>
+            미래솔루션은 기업의 업무 효율과 성장 속도를 높이기 위해
+            웹/앱 개발, 시스템 통합, 데이터 기반 컨설팅을 제공합니다.
+          </p>
+          <div class="btns">
+            <a href="#contact" class="btn btn-primary">상담 문의하기</a>
+            <a href="#about" class="btn btn-outline">회사 더 알아보기</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <h3>핵심 가치</h3>
+          <ul>
+            <li>고객 중심의 문제 해결</li>
+            <li>빠르고 안정적인 실행력</li>
+            <li>지속 가능한 기술 지원</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-title">
+          <h2>회사 소개</h2>
+          <p>기술과 사람을 연결해 더 나은 비즈니스를 만듭니다.</p>
+        </div>
+        <div class="about-grid">
+          <article class="card">
+            <h3>우리의 미션</h3>
+            <p>
+              복잡한 업무 환경을 단순화하고, 데이터와 기술을 통해 고객의
+              성장을 가속화하는 솔루션을 제공합니다.
+            </p>
+          </article>
+          <article class="card">
+            <h3>우리의 비전</h3>
+            <p>
+              국내를 넘어 글로벌 시장에서도 신뢰받는 디지털 전환 전문 기업으로
+              성장하는 것을 목표로 합니다.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-title">
+          <h2>주요 서비스</h2>
+          <p>고객 상황에 맞춘 맞춤형 서비스를 제공합니다.</p>
+        </div>
+        <div class="services-grid">
+          <article class="card">
+            <h3>웹/앱 개발</h3>
+            <p>반응형 웹사이트와 업무용 애플리케이션을 설계하고 개발합니다.</p>
+          </article>
+          <article class="card">
+            <h3>시스템 통합</h3>
+            <p>기존 시스템을 안정적으로 연동해 운영 효율을 개선합니다.</p>
+          </article>
+          <article class="card">
+            <h3>데이터 컨설팅</h3>
+            <p>데이터 분석 기반으로 의사결정을 돕는 전략을 제안합니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="stats">
+      <div class="container">
+        <div class="section-title">
+          <h2>성과 지표</h2>
+          <p>숫자로 증명하는 미래솔루션의 신뢰</p>
+        </div>
+        <div class="stats-grid">
+          <div class="card stat">
+            <strong>150+</strong>
+            <span>완료 프로젝트</span>
+          </div>
+          <div class="card stat">
+            <strong>70+</strong>
+            <span>파트너 기업</span>
+          </div>
+          <div class="card stat">
+            <strong>98%</strong>
+            <span>고객 만족도</span>
+          </div>
+          <div class="card stat">
+            <strong>12년</strong>
+            <span>업계 경험</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="contact-box">
+          <div>
+            <h2>프로젝트가 필요하신가요?</h2>
+            <p>
+              간단한 상담부터 도입 계획 수립까지, 비즈니스에 맞는 방법을 함께
+              찾겠습니다.
+            </p>
+          </div>
+          <div class="contact-info">
+            <p><strong>전화</strong> 02-1234-5678</p>
+            <p><strong>이메일</strong> contact@miraesolution.co.kr</p>
+            <p><strong>주소</strong> 서울특별시 강남구 테헤란로 00</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© 2026 미래솔루션. All rights reserved.</div>
+  </footer>
+</body>
+</html>

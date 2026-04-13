@@ -1,0 +1,255 @@
+.app {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #1a1d29 0%, #252a3a 50%, #1e2230 100%);
+  color: #e8eaef;
+}
+
+.app-header {
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-title {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.search-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 200px;
+  max-width: 420px;
+}
+
+.search-label {
+  font-size: 0.8rem;
+  color: #9aa3b2;
+}
+
+.search-input {
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  font-size: 0.95rem;
+}
+
+.search-input::placeholder {
+  color: #6b7280;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #7c9cff;
+  box-shadow: 0 0 0 2px rgba(124, 156, 255, 0.25);
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: #4f6fff;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #3d5ce6;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e8eaef;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.btn-save {
+  background: #34a853;
+  color: #fff;
+}
+
+.btn-save:hover {
+  background: #2d8f47;
+}
+
+.btn-danger {
+  background: rgba(220, 80, 80, 0.85);
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #c73e3e;
+}
+
+.memo-board {
+  position: relative;
+  padding: 1.25rem 1.5rem 2rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.board-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  color: #8b95a5;
+  line-height: 1.4;
+}
+
+.memo-rnd {
+  box-sizing: border-box;
+}
+
+.memo-rnd .memo-card {
+  height: 100%;
+}
+
+.empty-hint {
+  margin: 2rem 0;
+  text-align: center;
+  color: #8b95a5;
+  font-size: 0.95rem;
+}
+
+.memo-card {
+  background: linear-gradient(145deg, #f5e6a8 0%, #f0d878 100%);
+  color: #2c2416;
+  border-radius: 10px;
+  padding: 0.65rem 1rem 1rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.memo-drag-handle {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding: 0.35rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #5c4d2a;
+  cursor: grab;
+  user-select: none;
+  border-radius: 6px;
+  border: 1px dashed rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.memo-drag-handle:active {
+  cursor: grabbing;
+}
+
+.memo-drag-grip {
+  display: inline-block;
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(
+    to right,
+    #8a7a50 0 2px,
+    transparent 2px 4px,
+    #8a7a50 4px 6px,
+    transparent 6px 8px,
+    #8a7a50 8px 10px
+  );
+  opacity: 0.7;
+}
+
+.memo-card--editing {
+  background: linear-gradient(145deg, #fff9d6 0%, #ffeaa0 100%);
+  box-shadow: 0 0 0 2px #4f6fff, 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.memo-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-y: auto;
+}
+
+.memo-placeholder {
+  color: #7a6f52;
+  font-style: italic;
+}
+
+.memo-textarea {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.65);
+  color: #2c2416;
+  font-size: 0.95rem;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: none;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.memo-textarea:focus {
+  outline: none;
+  border-color: #4f6fff;
+  background: #fff;
+}
+
+.memo-actions {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+/* 노란 메모지 위에서도 보이도록 카드 안 버튼만 대비 강화 */
+.memo-card .btn-secondary {
+  background: #fff;
+  color: #1a2d4a;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.memo-card .btn-secondary:hover {
+  background: #f4f6f9;
+  color: #0f1a2e;
+}
+
+.memo-card .btn-save,
+.memo-card .btn-danger {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
