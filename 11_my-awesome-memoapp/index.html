@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Awesome Memo App</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <p class="eyebrow">Today is a good day</p>
+        <h1>My Awesome Memo</h1>
+        <p class="subtitle">밝고 가벼운 메모로 하루를 정리해보세요.</p>
+      </header>
+
+      <section class="memo-composer card">
+        <p id="authStatus" class="auth-status">로그인이 필요합니다.</p>
+        <div class="auth-row">
+          <input id="emailInput" type="email" placeholder="이메일" />
+          <input id="passwordInput" type="password" placeholder="비밀번호 (6자 이상)" />
+        </div>
+        <div class="auth-actions">
+          <button id="signupBtn">회원가입</button>
+          <button id="loginBtn">로그인</button>
+          <button id="logoutBtn" class="secondary-btn">로그아웃</button>
+          <button id="openDevModeBtn" class="secondary-btn">개발자모드</button>
+        </div>
+      </section>
+
+      <section id="memoComposerSection" class="memo-composer card">
+        <label for="memoInput">새 메모</label>
+        <div class="composer-row">
+          <input
+            id="memoInput"
+            type="text"
+            placeholder="예: 물 2L 마시기, 아이디어 메모하기"
+          />
+          <button id="addMemoBtn">추가</button>
+        </div>
+        <div class="composer-row search-row">
+          <input id="searchInput" type="text" placeholder="메모 검색어 입력" />
+          <button id="searchBtn" class="secondary-btn">검색</button>
+          <button id="resetSearchBtn" class="secondary-btn">초기화</button>
+        </div>
+      </section>
+
+      <section id="memoListSection" class="memo-list-section card">
+        <div class="section-title-row">
+          <h2>메모 목록</h2>
+          <span id="memoCount" class="count-chip">0개</span>
+        </div>
+        <ul id="memoList" class="memo-list"></ul>
+      </section>
+
+      <section id="devModeSection" class="card hidden">
+        <div class="section-title-row">
+          <h2>개발자모드</h2>
+          <button id="devLogoutBtn" class="secondary-btn">개발자모드 종료</button>
+        </div>
+        <p id="devStatus" class="auth-status">
+          개발자 인증을 진행하면 회원 정보와 메모를 확인할 수 있습니다.
+        </p>
+        <div class="auth-row">
+          <input id="devIdInput" type="text" placeholder="개발자 ID" />
+          <input id="devPasswordInput" type="password" placeholder="개발자 비밀번호" />
+        </div>
+        <div class="auth-actions">
+          <button id="devLoginBtn">개발자 인증</button>
+          <button id="refreshDevDataBtn" class="secondary-btn">데이터 새로고침</button>
+        </div>
+        <div id="devData" class="dev-data"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
