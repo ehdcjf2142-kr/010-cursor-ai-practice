@@ -3,3 +3,6 @@ node_modules
 .env
 
 /generated/prisma
+
+# Local SQLite databases (paths vary with DATABASE_URL / migrate cwd)
+prisma/**/*.db
