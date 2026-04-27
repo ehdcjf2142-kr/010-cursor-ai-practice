@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>안동시 의료기관 현황</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>안동시 의료기관 현황</h1>
+      <p class="desc">공공데이터 API를 이용해 의료기관 목록을 불러옵니다.</p>
+
+      <section class="controls">
+        <input id="keywordInput" type="text" placeholder="기관명/주소/전화 검색" />
+        <button id="searchBtn">검색</button>
+        <button id="resetBtn" class="secondary">초기화</button>
+      </section>
+
+      <p id="statusText" class="status">데이터를 불러오는 중...</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>기관명</th>
+              <th>주소</th>
+              <th>전화번호</th>
+              <th>구분</th>
+            </tr>
+          </thead>
+          <tbody id="hospitalTableBody"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
